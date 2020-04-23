@@ -3,35 +3,61 @@ import React from 'react';
 class Timer extends React.Component {
   constructor(props) {
     super(props)
+
     this.state = {
-      count: 0
+      time: 0,
+      start: 0,
+      isOn: false
     }
-  }
-  render() {
-    const {count} = this.state
-    return (
-      <div className="timer">{startCount}</div>
-    )
-  }
-  componentDidMount() {
-    const {startCount} = this.props;
-    this.setState({
-      count: startCount
-    })
+
+    this.startTimer = this.startTimer.bind(this)
+    this.stopTimer = this.stopTimer.bind(this)
+    this.resetTimer = this.resetTimer.bind(this)
   }
 
-  doIntervalChange = () => {
-    this.myInterval = setInterval(()=> {
-      this.setState(prevState => ({
-        count: prevState.count - 1
-      }))
-    }, 1000)
+
+  startTimer() {
+    this.setState({
+      time: this.state.time,
+      start: Date.now() - this.state.time,
+      isOn: true
+    })
+    this.timer = setInterval(() => this.setState ({
+      time: Date.now() - this.state.start
+    }), 1000)
   }
-  
-  // render()
-  componentWillUnmount() {
-    clearInterval(this.myInterval)
+
+  stopTimer() {
+    this.setState({isOn: false})
+    clearInterval(this.timer)
+  }
+
+  resetTimer() {
+    this.setState({time: 0})
+  }
+
+  render() {
+
+    let start = (this.state.time == 0) ? <button onClick={this.startTimer}>Start</button> : null
+
+    let stop = (this.state.isOn) ? <button onClick={this.stopTimer}>Stop</button> : null
+
+    let reset = (this.state.time != 0 && !this.state.isOn) ? <button onClick={this.resetTimer}>Reset</button> : null
+
+    let resume = (this.state.time != 0 && !this.state.isOn) ? <button onClick={this.startTimer}>Resume</button> : null
+    
+    return (
+      <div>
+        <h3 className="timer">{this.state.time}</h3>
+        {start}
+        {resume}
+        {stop}
+        {reset}
+      </div>
+    )
   }
 }
+
+
 
 export default Timer;
