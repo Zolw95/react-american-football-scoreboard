@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import BottomRow from "./BottomRow";
 import Timer from "./Timer";
+import Timer2 from "./Timer2";
 //import Scoreboard from "./Scoreboard";
 import "./App.css";
 import { render } from "@testing-library/react";

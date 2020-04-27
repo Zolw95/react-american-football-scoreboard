@@ -3,61 +3,51 @@ import React from 'react';
 class Timer extends React.Component {
   constructor(props) {
     super(props)
-
     this.state = {
-      time: 0,
-      start: 0,
-      isOn: false
+      count: 0
     }
-
-    this.startTimer = this.startTimer.bind(this)
-    this.stopTimer = this.stopTimer.bind(this)
-    this.resetTimer = this.resetTimer.bind(this)
-  }
-
-
-  startTimer() {
-    this.setState({
-      time: this.state.time,
-      start: Date.now() - this.state.time,
-      isOn: true
-    })
-    this.timer = setInterval(() => this.setState ({
-      time: Date.now() - this.state.start
-    }), 1000)
-  }
-
-  stopTimer() {
-    this.setState({isOn: false})
-    clearInterval(this.timer)
-  }
-
-  resetTimer() {
-    this.setState({time: 0})
   }
 
   render() {
+    //console.log(this.state.count)
+    let start = (this.state.count == 0) ? <button onClick={this.doIntervalChange}>Start</button> : null
 
-    let start = (this.state.time == 0) ? <button onClick={this.startTimer}>Start</button> : null
-
-    let stop = (this.state.isOn) ? <button onClick={this.stopTimer}>Stop</button> : null
-
-    let reset = (this.state.time != 0 && !this.state.isOn) ? <button onClick={this.resetTimer}>Reset</button> : null
-
-    let resume = (this.state.time != 0 && !this.state.isOn) ? <button onClick={this.startTimer}>Resume</button> : null
+    var date = new Date();
     
+    date.setTime(this.state.count * 1000)
+    let minutes = '0' + date.getUTCMinutes()
+    let seconds = '0' + date.getUTCSeconds()
+    let timer = minutes.substr(minutes.length-2) + ':' + seconds.substr(seconds.length-2)
+    //console.log(timer)
     return (
       <div>
-        <h3 className="timer">{this.state.time}</h3>
+        <h3 className="timer">{timer}</h3>
         {start}
-        {resume}
-        {stop}
-        {reset}
       </div>
     )
   }
+
+  componentDidMount() {
+    const startCount = 0
+    this.setState({
+      count: startCount
+    })
+    //Auto Start
+    //this.doIntervalChange()
+  }
+
+  doIntervalChange = () => {
+    this.myInterval = setInterval(()=> {
+      this.setState(prevState => ({
+        count: prevState.count + 1
+      }))
+    }, 1000)
+  }
+  
+  componentWillUnmount() {
+    clearInterval(this.myInterval)
+    this.state.count = 0
+  }
 }
-
-
 
 export default Timer;
